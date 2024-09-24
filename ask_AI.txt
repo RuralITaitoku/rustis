@@ -1,0 +1,23 @@
+
+rustで次のエラーが出るけど、どこが変？
+
+# エラー箇所
+    // Cookieを作成
+    let cookie = Cookie::build("my_cookie", "value")
+       .expires(chrono::Utc::now() + chrono::Duration::days(7))
+       .domain("example.com")
+       .path("/")
+       .secure(true) // HTTPS通信でのみ送る
+       .http_only(true) // JavaScriptからアクセスできないようにする
+       .finish();
+
+# エラー内容
+
+error[E0277]: the trait bound `Option<OffsetDateTime>: std::convert::From<chrono::DateTime<Utc>>` is not satisfied
+  --> src/main.rs:16:17
+   |
+16 |        .expires(chrono::Utc::now() + chrono::Duration::days(7))
+   |         ------- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ the trait `std::convert::From<chrono::DateTime<Utc>>` is not implemented for `Option<OffsetDateTime>`, which is required by `chrono::DateTime<Utc>: Into<Expiration>`
+   |         |
+   |         required by a bound introduced by this call
+

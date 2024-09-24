@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8"/>
+        <title>TODO App</title>
+    </head>
+    <body>
+        <div>
+            {% for entry in entries %}
+            <div>id {{ entry.id }} , test {{ entry.text }}</div>
+            {% endfor %}
+        </div>
+        <form action="/add" method="post" >
+            <textarea name="text">
+            </textarea>
+            <button>Add</button>
+        </form>
+    </body>
+</html>
