@@ -1,0 +1,25 @@
+<form action="." method="POST">
+  <input type="hidden" name="formId" value="inputWtml"/>
+  <label for="page" >ページ</label><input name="page" value="{{page}}" placeholder="ページ名"/> <br/>
+  <textarea id="wtmlinput" cols="99" rows="11" name="wtml"  placeholder="WTML">{{wtml}}</textarea><br/>
+  <button id="ALT-KeyS" name="btn" value="{{btn}}" tabindex="0">{{btn_label}}</button>
+</form>
+<button id="ALT-KeyF" onclick="fill_textarea()" tabindex="0">拡大</button>
+<script type="text/javascript">
+
+
+function fill_textarea() {
+  console.log("fill_textarea");
+  var wtml = document.querySelector("#wtmlinput");
+  if (wtml == null) {
+    return;
+  }
+  var wh = window.innerHeight;
+  var th = wtml.clientHeight;
+  console.log(wtml.rows *   wh/th);
+  var newRows = Math.floor(wtml.rows * wh / th);
+  console.log("newRows:" + newRows);
+  wtml.rows = newRows;
+  }
+
+</script>

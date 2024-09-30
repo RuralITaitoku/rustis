@@ -1,0 +1,194 @@
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <style>
+    a.unlink:link { color: #ff0000; }
+    a.unlink:visited { color: #ff0000; }
+    a.unlink:hover { color: #ff0000; }
+    a.unlink:active { color: #ff0000; }
+
+    .sidemenu {
+      background-color:#DDFFDD;
+    }
+    @media screen and (max-width: 979px) {
+    	.sidemenu {
+    		display: none;
+    	}
+    }
+    @media print {
+    	.sidemenu {
+    		display: none;
+    	}
+    }
+    .title {
+      font-size:30px;
+    }
+    h1, h2 {
+      font-family:verdana, arial, helvetica, Sans-Serif;
+      color:#000000;
+      background-color:#FFDDDD;
+      padding:.3em;
+      border:0;
+      margin:1px 1px 5px 1px;
+    }
+    h3 {
+      font-family:verdana, arial, helvetica, Sans-Serif;
+      border-bottom:3px solid #FFDDDD;
+      border-top:1px solid #FFDDDD;
+      border-left:10px solid #FFDDDD;
+      border-right:5px solid #FFDDDD;
+
+      background-color:#FFFFEE;
+      padding:.2em .2em .2em .4em;
+      margin:1px 1px 3px 1px;
+    }
+    h4 {
+      font-family:verdana, arial, helvetica, Sans-Serif;
+      border-left:18px solid #FFDDDD;
+
+      background-color:#FFFFEE;
+      padding:.1em .1em .1em .4em;
+      margin:1px;
+    }
+    h5, h6 {
+      font-family:verdana, arial, helvetica, Sans-Serif;
+      background-color:#DDEEFF;
+      padding:.3em;
+      border:0;
+      margin:0 0 .5em 0;
+    }
+    strong {
+      border-bottom:3px solid #FF0000;
+    }
+    .stable {
+      padding:0;
+      border:0;
+      margin:auto;
+      text-align:left;
+      color:inherit;
+      background-color:#ccd5dd;
+    }
+    .sth {
+      padding:5px;
+      margin:1px;
+      text-align:center;
+      color:inherit;
+      background-color:#EEEEEE;
+    }
+    .std {
+      padding:5px;
+      margin:1px;
+      color:inherit;
+      background-color:#FFFFFF;
+    }
+    .stdr {
+      padding:5px;
+      margin:1px;
+      text-align:right;
+      color:inherit;
+      background-color:#FFFFFF;
+    }
+    .stdrh {
+      padding:5px;
+      margin:1px;
+      text-align:right;
+      color:inherit;
+      background-color:#FFEEEE;
+    }
+    .stdg {
+      padding:5px;
+      margin:1px;
+      text-align:center;
+      color:inherit;
+      background-color:#AAAAAA;
+    }
+    .style_table {
+      padding:0;
+      border:0;
+      margin:auto;
+      text-align:left;
+      color:inherit;
+      background-color:#ccd5dd;
+    }
+    .style_th {
+      padding:5px;
+      margin:1px;
+      text-align:center;
+      color:inherit;
+      background-color:#EEEEEE;
+    }
+    .style_td {
+      padding:5px;
+      margin:1px;
+      color:inherit;
+      background-color:#FFFFFF;
+    }
+    .style_complate {
+      color:inherit;
+      background-color:#88FF88;
+    }
+    .style_error {
+      color:inherit;
+      background-color:#FF0000;
+    }
+    .table_of_contents {
+      background-color:#EEEEFF;
+      border: 1px solid #000022;
+      border-radius: 10px;
+    }
+    .inline_frame {
+      background-color:#EEFFEE;
+      width : fit-content;
+      padding : 20px ;
+      margin: 30px;
+      border: 1px solid #000022;
+      border-radius: 10px;
+    }
+
+    </style>
+    <title>{{title}}</title>
+  </head>
+  <body bgcolor="#FFFFEE">
+    <a href='./'>ホーム</a>
+    <form style="float: right;"method="POST">
+      <label for="page" >ページ</label><input name="page" value="{{page}}" placeholder="ページ名"/>
+      <input type="hidden" name="wtml"/>
+      <button id="ALT-KeyV" name="btn" value="go" tabindex="0">表示</button>
+      <button id="ALT-KeyW" name="btn" value="edit" tabindex="0">編集</button>
+    </form>
+    
+
+    <table width='100%'>
+      <tr>
+        <td id='pageTop' class='title' align='center' colspan='2'>
+        {{title}}
+        </td>
+      </tr>
+      <tr>
+        <td class='sidemenu' bgcolor="#DDFFDD" valign='top' width='200' nowrap>{{sidemenu|safe}}</td>
+        <td>
+          {{body|safe}}
+        </td>
+        <td>
+        </td>
+      </tr>
+    </table>
+    <script type='text/javascript'>
+      document.onkeypress = function (e) {
+        console.log("ALT:" + e.altKey);
+        console.log("Code:" + (e.code == "KeyA"));
+        if(e.altKey) {
+          var findId = "#ALT-" + e.code;
+          console.log(findId);
+          var button = document.querySelector(findId);
+          if (button != null) {
+            button.click();
+          }
+          console.log("ボタン？" + button);
+        }
+      }
+
+    </script>
+  </body>
+
+</html>

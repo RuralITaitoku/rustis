@@ -1,8 +1,16 @@
 set -x
 
 if [ "$1" = "run" ];then
-	shft 3
+    set +x
+    echo ========================================================
+	set -x
+    shift 3
 	cargo run /Volumes/SSD480G/eroanime  -f .mp4 -t _m.mp4
+elif [ "$1" = "release" ]; then
+    set +x
+    echo ========================================================
+	set -x
+    cargo build --release
 elif [ "$1" = "check" ]; then
     set +x
     echo ▪️▪️▪️▪️▪️▪️▪️▪️▪️▪️▪️▪️▪️▪️▪️▪️ ruralisプロセスチェック ▪️▪️▪️▪️▪️▪️▪️▪️▪️▪️▪️▪️▪️▪️▪️▪️▪️▪️▪️▪️
@@ -17,7 +25,19 @@ elif [ "$1" = "net" ]; then
     else
     	netstat -an | grep 8080
     fi
+elif [ "$1" = "copy" ]; then
+
+	cp -r /Users/yuruyuru/relax/taiki/lesson/rust/rustis/body.sh .
+
+
+elif [ "$1" = "commit" ]; then
+    set +x
+    MES=$(date +"%Y年%m月%d日%H時%M分")
+    set -x
+    echo $MES
+    git commit -m "$MES"
 else
+    set +x
     echo ========================================================
 	cargo build
 fi
