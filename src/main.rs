@@ -144,7 +144,6 @@ fn select_from_name(conn: &Connection, page_name: &String
         let name = row.get(1)?;
         let wtml = row.get(2)?;
         let html = row.get(3)?;
-        println!("op_html{:?}", &html);
         Ok(PageData{id,name,wtml,html,})
     })?;
 
@@ -259,8 +258,6 @@ fn get_html_from_wtml(wtml:&String) -> String {
     let mut html = String::from("");
     // 改行の処理
     let lines:Vec<&str> = wtml.lines().collect();
-    println!("{:?}", wtml);
-    println!("{:?}", lines);
     let mut bm_index = 0;
     for line in lines {
         if line.starts_with("###-") {
@@ -340,7 +337,6 @@ async fn get_zubolite(tail: web::Path<String>,
         String::from ("")
     };
 
-    let body_html:String ;
     let rows = select_from_name(&conn, &page_name)?;
     println!("rows:{:?}", &rows);
 
@@ -401,8 +397,7 @@ async fn post_zubolite(tail: web::Path<String>,
     if params.btn == "go" {
         //画面遷移
         let encoded = encode(params.page.as_str());
-
-        let location = String::from("/") + &encoded;
+        let location = format!("./{}", &encoded);
         let mut res = HttpResponse::SeeOther();
         res.append_header((header::LOCATION, location));   
         return Ok(res.finish());
