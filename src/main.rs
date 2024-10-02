@@ -236,7 +236,7 @@ fn get_line_html(text:&str) -> String {
                     html.push_str("<a href='");
                     let enc = encode(c);
                     if url_str == "" {
-                        html.push_str("/");
+                        html.push_str("./");
                         html.push_str(&enc);
                     } else {
                         html.push_str(&url_str);
