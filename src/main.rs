@@ -413,7 +413,7 @@ async fn post_zubolite(tail: web::Path<String>,
         //画面遷移
         let encoded = encode(params.page.as_str());
 
-        let location = String::from("/") + &encoded;
+        let location = format!("./{}", &encoded);
         let mut res = HttpResponse::SeeOther();
         res.append_header((header::LOCATION, location));   
         return Ok(res.finish());
@@ -431,8 +431,7 @@ async fn post_zubolite(tail: web::Path<String>,
         
         //画面遷移
         let encoded = encode(params.page.as_str());
-
-        let location = String::from("/") + &encoded;
+        let location = format!("./{}", &encoded);
         let mut res = HttpResponse::SeeOther();
         res.append_header((header::LOCATION, location));   
         return Ok(res.finish());
