@@ -233,6 +233,14 @@ fn get_line_html(text:&str) -> String {
                 html.push_str(" />");
             } else {
                 if let Some(c) = caps.get(i) {
+                    if url_str == "" {
+                        let a_html = format!("<a href='./{}'>{}</a>", encode(c), c);
+                        html.push_str(&a_html);
+                    } else {
+                        let a_html = format!("<a href='{}'>{}</a>", url_str, c);
+                        html.push_str(&a_html);
+                    }
+                        /*
                     html.push_str("<a href='");
                     let enc = encode(c);
                     if url_str == "" {
@@ -244,6 +252,7 @@ fn get_line_html(text:&str) -> String {
                     html.push_str("'>");
                     html.push_str(c);        
                     html.push_str("</a>");
+                    */
                 }
             }
         }
