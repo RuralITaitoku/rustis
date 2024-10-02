@@ -289,8 +289,8 @@ fn get_html_from_wtml(wtml:&String) -> String {
         } else {
             let line_html = get_line_html(&line);
             html.push_str(&line_html);
+            html.push_str("<br/>\n");
         }
-        html.push_str("<br/>\n");
     }
     if bm_index > 0 {
         format!("{}</div>{}", toc_html, html)
@@ -330,7 +330,6 @@ async fn get_zubolite(tail: web::Path<String>,
 
     let side_menu_name = "SideMenu".to_string();
     let side_menu_rows = select_from_name(&conn, &side_menu_name)?;
-    println!("side_menu_rows:{:?}", &side_menu_rows);
     let side_html = if side_menu_rows.len() > 0 {
         side_menu_rows[0].html.to_string()
     } else {
