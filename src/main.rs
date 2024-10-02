@@ -255,47 +255,51 @@ fn get_line_html(text:&str) -> String {
 
 
 fn get_html_from_wtml(wtml:&String) -> String {
+    let mut toc_html = String::from("<div class='table_of_contents'>\n");
     let mut html = String::from("");
     // 改行の処理
     let lines:Vec<&str> = wtml.lines().collect();
+    println!("{:?}", wtml);
+    println!("{:?}", lines);
+    let mut bm_index = 0;
     for line in lines {
         if line.starts_with("###-") {
-            html.push_str("<h3>");
             let line = line.trim_start_matches("###-");
-            html.push_str(&esc_html(&line));
-            html.push_str("</h3>");
+            html.push_str(&format!("<h3>{}</h3>\n", &esc_html(&line)));
         } else if line.starts_with("###") {
-            html.push_str("<h3>");
             let line = line.trim_start_matches("###");
-            html.push_str(&esc_html(&line));
-            html.push_str("</h3>");
+            bm_index = bm_index + 1;
+            toc_html.push_str(&format!("　　　　　<a href='row{}'>{}</a><br/>\n", bm_index, &esc_html(&line)));
+            html.push_str(&format!("<h3 id='row{}'>{}</h3>\n", bm_index, &esc_html(&line)));
         } else if line.starts_with("##-") {
-            html.push_str("<h2>");
             let line = line.trim_start_matches("##-");
-            html.push_str(&esc_html(&line));
-            html.push_str("</h2>");
+            html.push_str(&format!("<h2>{}</h2>\n", &esc_html(&line)));
         } else if line.starts_with("##") {
-            html.push_str("<h2>");
             let line = line.trim_start_matches("##");
-            html.push_str(&esc_html(&line));
-            html.push_str("</h2>");
+            bm_index = bm_index + 1;
+            toc_html.push_str(&format!("　　　<a href='row{}'>{}</a><br/>\n", bm_index, &esc_html(&line)));
+            html.push_str(&format!("<h2 id='row{}'>{}</h2>\n", bm_index, &esc_html(&line)));
         } else if line.starts_with("#-") {
-            html.push_str("<h1>");
             let line = line.trim_start_matches("#-");
-            html.push_str(&esc_html(&line));
-            html.push_str("</h1>");
+            html.push_str(&format!("<h1>{}</h1>\n", &esc_html(&line)));
         } else if line.starts_with("#") {
-            html.push_str("<h1>");
             let line = line.trim_start_matches("#");
-            html.push_str(&esc_html(&line));
-            html.push_str("</h1>");
+            bm_index = bm_index + 1;
+            toc_html.push_str(&format!("　<a href='row{}'>{}</a><br/>\n", bm_index, &esc_html(&line)));
+            html.push_str(&format!("<h1 id='row{}'>{}</h1>\n", bm_index, &esc_html(&line)));
+        } else if line.starts_with("---") {
+            html.push_str("<hr />");
         } else {
             let line_html = get_line_html(&line);
             html.push_str(&line_html);
         }
         html.push_str("<br/>\n");
     }
-    html
+    if bm_index > 0 {
+        format!("{}</div>{}", toc_html, html)
+    } else {
+        html
+    }
 }
 
 
@@ -405,7 +409,8 @@ async fn post_zubolite(tail: web::Path<String>,
     }
     if params.btn == "insert" {
         let conn = db.get()?;
-        let html = &params.wtml;
+        let wtml = &params.wtml;
+        let html = get_html_from_wtml(&wtml);
         conn.execute("
             insert into page(name, wtml, html) values(?, ?, ?)
             ", &[&params.page, &params.wtml, &html])?;

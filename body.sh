@@ -25,10 +25,8 @@ elif [ "$1" = "net" ]; then
     else
     	netstat -an | grep 8080
     fi
-elif [ "$1" = "copy" ]; then
-
-	cp -r /Users/yuruyuru/relax/taiki/lesson/rust/rustis/body.sh .
-
+elif [ "$1" = "install" ]; then
+	cp -r src body.sh Cargo.lock Cargo.toml /Users/yuruyuru/relax/body/rustis
 
 elif [ "$1" = "commit" ]; then
     set +x
