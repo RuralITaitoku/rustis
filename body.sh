@@ -4,8 +4,9 @@ if [ "$1" = "run" ];then
     set +x
     echo ========================================================
 	set -x
-    shift 3
-	cargo run /Volumes/SSD480G/eroanime  -f .mp4 -t _m.mp4
+	sh  stop_rustis.sh
+	nohup ./target/debug/rustis > log.log 2>&1 &
+	echo "kill $!" > stop_rustis.sh
 elif [ "$1" = "release" ]; then
     set +x
     echo ========================================================
@@ -37,5 +38,6 @@ elif [ "$1" = "commit" ]; then
 else
     set +x
     echo ========================================================
+	clear
 	cargo build
 fi

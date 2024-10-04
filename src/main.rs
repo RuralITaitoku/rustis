@@ -1,6 +1,7 @@
 use actix_web::{get, post, web, App, HttpRequest, HttpResponse, HttpServer, ResponseError};
 use actix_web::cookie::{Cookie, time::Duration};
 use actix_web::http::header;
+use actix_web::http::StatusCode;
 use askama::Template;
 use thiserror::Error;
 use r2d2::Pool;
@@ -14,6 +15,10 @@ use serde::Deserialize;
 use urlencoding::encode;
 // use urlencoding::decode;
 use regex::Regex;
+use std::fs;
+//use std::io;
+//use std::fs::File;
+use std::io::Read;
 
 
 
@@ -37,15 +42,17 @@ struct ZuboliteInput {
 
 
 
-#[derive(Debug, Error)]
-enum PageError {
-    #[error("Failed to render HTML")]
-    AskamaError(#[from] askama::Error),
-    #[error("Failed to get DB connection")]
-    ConnectionPoolError(#[from] r2d2::Error),
-    #[error("Failed SQL execution")]
-    SQLiteError(#[from] rusqlite::Error),
-}
+    #[derive(Debug, Error)]
+    enum PageError {
+        #[error("Failed to render HTML")]
+        AskamaError(#[from] askama::Error),
+        #[error("Failed to get DB connection")]
+        ConnectionPoolError(#[from] r2d2::Error),
+        #[error("Failed SQL execution")]
+        SQLiteError(#[from] rusqlite::Error),
+        #[error("IOError")]
+        IOError(#[from] std::io::Error),
+    }
 
 impl ResponseError for PageError{}
 
@@ -308,6 +315,36 @@ fn get_html_from_wtml(wtml:&String) -> String {
     }
 }
 
+fn res_file(file_name:&String) ->  Result<HttpResponse, PageError> {
+
+    // ファイルを読み込む
+    let mut file = fs::File::open(file_name)?;
+    let mut buffer = Vec::new();
+    file.read_to_end(&mut buffer)?;
+
+    let content_type = if file_name.ends_with(".html") {
+        "text/html"
+    } else if file_name.ends_with(".css") {
+        "text/css"
+    } else if file_name.ends_with(".js") {
+        "text/javascript"
+    } else if file_name.ends_with(".jpg") || file_name.ends_with(".jpeg") {
+        "image/jpeg"
+    } else if file_name.ends_with(".png") {
+        "image/png"
+    } else if file_name.ends_with(".mp4") {
+        "video/mp4"
+    } else if file_name.ends_with(".ico") {
+        "image/x-icon"
+    } else {
+        "text/plain"
+    };
+
+    // HTTPレスポンスを作成
+    Ok(HttpResponse::build(StatusCode::OK)
+        .content_type(content_type)
+        .body(buffer))
+}
 
 #[get("/{tail:.*}")]
 async fn get_zubolite(tail: web::Path<String>,
@@ -319,11 +356,25 @@ async fn get_zubolite(tail: web::Path<String>,
     let session_id = get_session_id(&req);
     println!("セッションID:{:?}", session_id);
 
-
-    let page_id = dec_base62(&tail.to_string());
-
+    
     // ページ情報を取得
     let mut page_name = tail.into_inner();
+
+    let file_path = format!("/Library/WebServer/Documents/{}", &page_name);
+    println!("file_path={}", &file_path);
+
+
+    let res = res_file(&file_path);
+    match res {
+        Ok(http_res) => {
+            return Ok(http_res);
+        },
+        Err(e) => {
+            println!("{}:{:?}", &file_path, e);
+        },
+    }
+
+    // ページ情報を取得
     println!("page_name.len={}", page_name.len());
     if page_name.len() == 0 {
         page_name = "こんにちは".to_string();
@@ -331,11 +382,7 @@ async fn get_zubolite(tail: web::Path<String>,
 
     let conn = db.get()?;
 
-
-
-
     println!("DB接続：{:?}", &conn);
-    println!("get id == {:?}", page_id);
 
     let side_menu_name = "SideMenu".to_string();
     let side_menu_rows = select_from_name(&conn, &side_menu_name)?;
@@ -346,7 +393,6 @@ async fn get_zubolite(tail: web::Path<String>,
     };
 
     let rows = select_from_name(&conn, &page_name)?;
-    println!("rows:{:?}", &rows);
 
     let body_html:String ;
     if rows.len() == 0 {
