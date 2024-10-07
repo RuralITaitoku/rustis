@@ -503,6 +503,7 @@ async fn post_zubolite(tail: web::Path<String>,
             btn_label: "登録".to_string(),
         };
     } else{
+        println!("--- 506 page_id={}", &rows[0].id);
         let name = &rows[0].name;
         let wtml = &rows[0].wtml;
         zubo_input = ZuboliteInput {
