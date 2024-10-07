@@ -17,7 +17,7 @@ use urlencoding::encode;
 use regex::Regex;
 use std::fs;
 //use std::io;
-//use std::fs::File;
+use std::path::Path;
 use std::io::Read;
 
 
@@ -346,6 +346,15 @@ fn res_file(file_name:&String) ->  Result<HttpResponse, PageError> {
         .body(buffer))
 }
 
+fn file_exists(file_path: &String) -> bool {
+    let path = Path::new(file_path);
+    match fs::metadata(path) {
+        Ok(_) => true,
+        Err(_) => false,
+    }
+}
+
+
 #[get("/{tail:.*}")]
 async fn get_zubolite(tail: web::Path<String>,
                     req: HttpRequest,
@@ -360,7 +369,11 @@ async fn get_zubolite(tail: web::Path<String>,
     // ページ情報を取得
     let mut page_name = tail.into_inner();
 
-    let file_path = format!("/Library/WebServer/Documents/{}", &page_name);
+    let mut file_path = format!("/Library/WebServer/Documents/{}", &page_name);
+    if file_exists(&file_path) == false {
+        file_path =  format!("/var/www/html/{}", &page_name);
+    }
+
     println!("file_path={}", &file_path);
 
 
