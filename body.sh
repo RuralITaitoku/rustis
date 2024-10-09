@@ -27,7 +27,7 @@ elif [ "$1" = "net" ]; then
     	netstat -an | grep 8080
     fi
 elif [ "$1" = "install" ]; then
-	cp -r src body.sh Cargo.lock Cargo.toml /Users/yuruyuru/relax/body/rustis
+	cp -r src templates body.sh Cargo.lock Cargo.toml /Users/yuruyuru/relax/body/rustis
 
 elif [ "$1" = "commit" ]; then
     set +x

@@ -30,6 +30,14 @@ struct Zubolite {
     sidemenu: String,
     body: String,    
 }
+#[derive(Template)]
+#[template[path = "zubolite_smp.html"]]
+struct ZuboliteSMP {
+    page: String, 
+    title: String,
+    sidemenu: String,
+    body: String,    
+}
 
 #[derive(Template)]
 #[template[path = "zubolite_input.html"]]
@@ -355,6 +363,16 @@ fn file_exists(file_path: &String) -> bool {
 }
 
 
+fn is_smartphone(req: &HttpRequest) -> bool {
+    let user_agent = req.headers().get("User-Agent").unwrap();
+    let user_agent = user_agent.to_str().unwrap();
+
+    let re = Regex::new(r"(iPhone|Android)").unwrap();
+    re.is_match(user_agent)
+}
+
+
+
 #[get("/{tail:.*}")]
 async fn get_zubolite(tail: web::Path<String>,
                     req: HttpRequest,
@@ -365,6 +383,7 @@ async fn get_zubolite(tail: web::Path<String>,
     let session_id = get_session_id(&req);
     println!("セッションID:{:?}", session_id);
 
+    let smp = is_smartphone(&req);
     
     // ページ情報を取得
     let mut page_name = tail.into_inner();
@@ -427,13 +446,21 @@ async fn get_zubolite(tail: web::Path<String>,
             btn_label: "登録".to_string(),
         };
     }
-    let html = Zubolite{
-     page: page_name.to_string(),
-     title: page_name.to_string(),
-     sidemenu: side_html.to_string(),
-     body: body_html,
-    };
-    let response_body = html.render()?;
+    let response_body = if smp {
+            let html = ZuboliteSMP{
+                page: page_name.to_string(),
+                title: page_name.to_string(),
+                sidemenu: side_html.to_string(),
+                body: body_html,};
+            html.render()?
+        } else {
+            let html = Zubolite{
+                page: page_name.to_string(),
+                title: page_name.to_string(),
+                sidemenu: side_html.to_string(),
+                body: body_html,};
+            html.render()?
+        };
 
     let cookie = Cookie::build("session_id", "sessiontest")
        .path("/")
@@ -446,6 +473,7 @@ async fn get_zubolite(tail: web::Path<String>,
 
 #[post("/{tail:.*}")]
 async fn post_zubolite(tail: web::Path<String>, 
+                    req: HttpRequest,
                     params: web::Form<PageParams>,
                     db: web::Data<Pool<SqliteConnectionManager>>) -> Result<HttpResponse, PageError> {
     let cookie = Cookie::build("my_cookie", "value")
@@ -535,14 +563,24 @@ async fn post_zubolite(tail: web::Path<String>,
         String::from ("")
     };
 
-    let input_html = zubo_input.render()?;
-    let html = Zubolite{
-     page: page_name.to_string(),
-     title: page_name.to_string(),
-     sidemenu: side_html.to_string(),
-     body: input_html,
+    let body_html = zubo_input.render()?;
+
+    let smp = is_smartphone(&req);
+    let response_body = if smp {
+        let html = ZuboliteSMP{
+            page: page_name.to_string(),
+            title: page_name.to_string(),
+            sidemenu: side_html.to_string(),
+            body: body_html,};
+        html.render()?
+    } else {
+        let html = Zubolite{
+            page: page_name.to_string(),
+            title: page_name.to_string(),
+            sidemenu: side_html.to_string(),
+            body: body_html,};
+        html.render()?
     };
-    let response_body = html.render()?;
     return Ok(HttpResponse::Ok().cookie(cookie).body(response_body));
 }
 
