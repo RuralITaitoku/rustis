@@ -282,7 +282,7 @@ fn get_html_from_wtml(wtml:&String) -> String {
         } else if line.starts_with("###") {
             let line = line.trim_start_matches("###");
             bm_index = bm_index + 1;
-            toc_html.push_str(&format!("　　　　　<a href='row{}'>{}</a><br/>\n", bm_index, &esc_html(&line)));
+            toc_html.push_str(&format!("　　　　　<a href='#row{}'>{}</a><br/>\n", bm_index, &esc_html(&line)));
             html.push_str(&format!("<h4 id='row{}'>{}</h4>\n", bm_index, &esc_html(&line)));
         } else if line.starts_with("##-") {
             let line = line.trim_start_matches("##-");
@@ -290,7 +290,7 @@ fn get_html_from_wtml(wtml:&String) -> String {
         } else if line.starts_with("##") {
             let line = line.trim_start_matches("##");
             bm_index = bm_index + 1;
-            toc_html.push_str(&format!("　　　<a href='row{}'>{}</a><br/>\n", bm_index, &esc_html(&line)));
+            toc_html.push_str(&format!("　　　<a href='#row{}'>{}</a><br/>\n", bm_index, &esc_html(&line)));
             html.push_str(&format!("<h3 id='row{}'>{}</32>\n", bm_index, &esc_html(&line)));
         } else if line.starts_with("#-") {
             let line = line.trim_start_matches("#-");
@@ -298,7 +298,7 @@ fn get_html_from_wtml(wtml:&String) -> String {
         } else if line.starts_with("#") {
             let line = line.trim_start_matches("#");
             bm_index = bm_index + 1;
-            toc_html.push_str(&format!("　<a href='row{}'>{}</a><br/>\n", bm_index, &esc_html(&line)));
+            toc_html.push_str(&format!("　<a href='#row{}'>{}</a><br/>\n", bm_index, &esc_html(&line)));
             html.push_str(&format!("<h2 id='row{}'>{}</h2>\n", bm_index, &esc_html(&line)));
         } else if line.starts_with("---") {
             html.push_str("<hr />");
