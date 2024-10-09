@@ -24,6 +24,12 @@
     button {
       font-size:160%;
     }
+    input {
+      font-size:160%;
+    }
+    textarea {
+      font-size:120%;
+    }
 
     @media screen and (max-width: 979px) {
     	.sidemenu {
@@ -163,7 +169,7 @@
   <body bgcolor="#FFFFEE">
     <a href='./'>ホーム</a>
     <form style="float: right;"method="POST">
-      <label for="page" >ページ</label><input name="page" value="{{page}}" placeholder="ページ名"/>
+      <input style="font-size:150%;" name="page" value="{{page}}" placeholder="ページ名"/>
       <input type="hidden" name="wtml"/>
       <button id="ALT-KeyV" name="btn" value="go" tabindex="0">表示</button>
       <button id="ALT-KeyW" name="btn" value="edit" tabindex="0">編集</button>
