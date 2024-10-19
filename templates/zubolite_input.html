@@ -3,6 +3,8 @@
   <label for="page" >ページ</label><input name="page" value="{{page}}" placeholder="ページ名"/> <br/>
   <textarea id="wtmlinput" cols="99" rows="11" name="wtml"  placeholder="WTML">{{wtml}}</textarea><br/>
   <button id="ALT-KeyS" name="btn" value="{{btn}}" tabindex="0">{{btn_label}}</button>
+  &nbsp;&nbsp;
+  <input type="button" value="日誌" onclick="insert_journal()"/>
   <input type="button" value="今日リンク" onclick="insert_today()"/>
   <input type="button" value="明日リンク" onclick="insert_tomorrow()"/>
 </form>
@@ -19,6 +21,23 @@ function insert_wtml(text) {
   const after  = wtml.value.substring(startPos);
   wtml.value = before + text + after;
   wtml.selectionStart = wtml.selectionEnd = startPos + text.length;
+}
+
+function insert_journal() {
+  const journal = `
+# 計画
+
+# 実績
+09:00〜12:00
+12:00〜15:00
+15:00〜18:00
+
+# まとめ
+
+# 次の日
+
+`;
+  insert_wtml(journal);
 }
 
 function insert_today() {
