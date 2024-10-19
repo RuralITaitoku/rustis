@@ -3,10 +3,42 @@
   <label for="page" >ページ</label><input name="page" value="{{page}}" placeholder="ページ名"/> <br/>
   <textarea id="wtmlinput" cols="99" rows="11" name="wtml"  placeholder="WTML">{{wtml}}</textarea><br/>
   <button id="ALT-KeyS" name="btn" value="{{btn}}" tabindex="0">{{btn_label}}</button>
+  <input type="button" value="今日リンク" onclick="insert_today()"/>
+  <input type="button" value="明日リンク" onclick="insert_tomorrow()"/>
 </form>
 <button id="ALT-KeyF" onclick="fill_textarea()" tabindex="0">拡大</button>
 <script type="text/javascript">
 
+function insert_wtml(text) {
+  var wtml = document.querySelector("#wtmlinput");
+  if (wtml == null) {
+    return;
+  }
+  const startPos = wtml.selectionStart;
+  const before = wtml.value.substring(0, startPos);
+  const after  = wtml.value.substring(startPos);
+  wtml.value = before + text + after;
+  wtml.selectionStart = wtml.selectionEnd = startPos + text.length;
+}
+
+function insert_today() {
+  const today = new Date();
+  const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'short' };
+  const formattedDate = today.toLocaleDateString('ja-JP', options);
+  console.log(formattedDate); // 例: 2024年10月19日 (土)
+  const text = "[" + formattedDate + "]";
+  insert_wtml(text);
+}
+
+function insert_tomorrow() {
+  const today = new Date();
+  const tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000);
+  const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'short' };
+  const formattedDate = tomorrow.toLocaleDateString('ja-JP', options);
+  console.log(formattedDate); // 例: 2024年10月19日 (土)
+  const text = "[" + formattedDate + "]";
+  insert_wtml(text);
+}
 
 function fill_textarea() {
   console.log("fill_textarea");
