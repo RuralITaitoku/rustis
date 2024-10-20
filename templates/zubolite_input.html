@@ -5,7 +5,9 @@
   <button id="ALT-KeyS" name="btn" value="{{btn}}" tabindex="0">{{btn_label}}</button>
   &nbsp;&nbsp;
   <input type="button" value="日誌" onclick="insert_journal()"/>
+  &nbsp;&nbsp;
   <input type="button" value="今日リンク" onclick="insert_today()"/>
+  &nbsp;
   <input type="button" value="明日リンク" onclick="insert_tomorrow()"/>
 </form>
 <button id="ALT-KeyF" onclick="fill_textarea()" tabindex="0">拡大</button>
@@ -26,6 +28,9 @@ function insert_wtml(text) {
 function insert_journal() {
   const journal = `
 # 計画
+□ 
+□ 
+□ 
 
 # 実績
 09:00〜12:00
@@ -34,7 +39,7 @@ function insert_journal() {
 
 # まとめ
 
-# 次の日
+# 次への準備
 
 `;
   insert_wtml(journal);

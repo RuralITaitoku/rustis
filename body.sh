@@ -22,9 +22,9 @@ elif [ "$1" = "net" ]; then
     echo ▪️▪️▪️▪️▪️▪️▪️▪️▪️▪️▪️▪️▪️▪️▪️▪️ ネットワークチェック158 ▪️▪️▪️▪️▪️▪️▪️▪️▪️▪️▪️▪️▪️▪️▪️▪️▪️▪️▪️▪️
     set -x
     if [ "$OS" = "Darwin" ]; then
-    	netstat -an | grep 8080
+    	netstat -an | grep 1582
     else
-    	netstat -an | grep 8080
+    	netstat -an | grep 1582
     fi
 elif [ "$1" = "install" ]; then
 	cp -r src templates body.sh Cargo.lock Cargo.toml /Users/yuruyuru/relax/body/rustis
