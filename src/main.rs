@@ -430,7 +430,7 @@ async fn get_zubolite(tail: web::Path<String>,
     if rows.len() == 0 {
         let zubo_input = ZuboliteInput {
             page: page_name.to_string(), 
-            wtml: "wtml".to_string(),
+            wtml: "".to_string(),
             btn:  "insert".to_string(),
             btn_label: "登録".to_string(),
         };
