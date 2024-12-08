@@ -342,6 +342,8 @@ fn res_file(file_name:&String) ->  Result<HttpResponse, PageError> {
         "image/png"
     } else if file_name.ends_with(".mp4") {
         "video/mp4"
+    } else if file_name.ends_with(".aac") {
+        "audio/aac"
     } else if file_name.ends_with(".ico") {
         "image/x-icon"
     } else {
